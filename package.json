@@ -1,0 +1,41 @@
+{
+  "name": "bet_tracker",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "browserify": {
+    "transform": [
+      "debowerify"
+    ]
+  },
+  "dependencies": {
+    "accounting": "^0.3.2",
+    "body-parser": "~1.0.0",
+    "bookshelf": "^0.7.3",
+    "cookie-parser": "~1.0.1",
+    "debowerify": "^0.7.1",
+    "debug": "^0.7.4",
+    "enchilada": "^0.9.0",
+    "errorhandler": "^1.1.0",
+    "express": "^4.2.0",
+    "jade": "~1.3.0",
+    "knex": "^0.6.15",
+    "lodash": "^2.4.1",
+    "method-override": "^2.0.2",
+    "moment": "^2.7.0",
+    "morgan": "~1.0.0",
+    "sequelize": "^1.7.8",
+    "static-favicon": "~1.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^4.1.10",
+    "debowerify": "^0.7.1",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^2.1.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-express": "^1.3.5",
+    "grunt-parallel": "^0.3.1"
+  }
+}

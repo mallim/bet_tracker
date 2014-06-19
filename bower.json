@@ -1,0 +1,29 @@
+{
+  "name": "bet_tracker",
+  "version": "0.0.1",
+  "description": "bet_tracker",
+  "authors": [
+    "Ian Lim"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {},
+  "dependencies": {
+    "angular": "~1.2.18",
+    "angular-route": "~1.2.18",
+    "angular-bootstrap": "~0.11.0",
+    "bootstrap": "~3.1.1",
+    "angular-resource": "~1.2.18",
+    "angular-charts": "~0.2.3",
+    "angular-nvd3": "~0.0.8"
+  },
+  "resolutions": {
+    "d3": "~3.4"
+  }
+}
