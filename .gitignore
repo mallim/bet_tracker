@@ -1,8 +1,8 @@
 bower_components
 node_modules
-.iml
-.idea
-
+*.iml
+.idea/
+bet_tracker.db
 
 #################
 ## Eclipse
@@ -219,6 +219,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-.idea/jsLibraryMappings.xml
-.idea/libraries/bet_tracker_node_modules.xml
-bet_tracker.db
+
