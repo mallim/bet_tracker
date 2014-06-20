@@ -12,8 +12,8 @@
     </script>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-    <link ref="stylesheet" href="/tile.css"/>
-    <link ref="stylesheet" href="/nv.d3.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,114 +22,81 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style>
-        .tile-progress {
-            background-color: #303641;
-            color: #fff;
-        }
-        .tile-progress {
-            background: #00a65b;
-            color: #fff;
-            margin-bottom: 20px;
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            border-radius: 3px;
-        }
-        .tile-progress .tile-header {
-            padding: 15px 20px;
-            padding-bottom: 40px;
-        }
-        .tile-progress .tile-progressbar {
-            height: 2px;
-            background: rgba(0,0,0,0.18);
-            margin: 0;
-        }
-        .tile-progress .tile-progressbar span {
+        .tile {
+            width: 100%;
+            display: inline-block;
+            box-sizing: border-box;
             background: #fff;
-        }
-        .tile-progress .tile-progressbar span {
-            display: block;
-            background: #fff;
-            width: 0;
-            height: 100%;
-            -webkit-transition: all 1.5s cubic-bezier(0.230,1.000,0.320,1.000);
-            -moz-transition: all 1.5s cubic-bezier(0.230,1.000,0.320,1.000);
-            -o-transition: all 1.5s cubic-bezier(0.230,1.000,0.320,1.000);
-            transition: all 1.5s cubic-bezier(0.230,1.000,0.320,1.000);
-        }
-        .tile-progress .tile-footer {
             padding: 20px;
-            text-align: right;
-            background: rgba(0,0,0,0.1);
-            -webkit-border-radius: 0 0 3px 3px;
-            -webkit-background-clip: padding-box;
-            -moz-border-radius: 0 0 3px 3px;
-            -moz-background-clip: padding;
-            border-radius: 0 0 3px 3px;
-            background-clip: padding-box;
-            -webkit-border-radius: 0 0 3px 3px;
-            -moz-border-radius: 0 0 3px 3px;
-            border-radius: 0 0 3px 3px;
+            margin-bottom: 30px;
         }
-        .tile-progress.tile-red {
-            background-color: #f56954;
+        .tile .title {
+            margin-top: 0px;
+        }
+        .tile.purple, .tile.blue, .tile.red, .tile.orange, .tile.green {
             color: #fff;
         }
-        .tile-progress {
-            background-color: #303641;
-            color: #fff;
+        .tile.purple {
+            background: #5133ab;
         }
-        .tile-progress.tile-blue {
-            background-color: #0073b7;
-            color: #fff;
+        .tile.purple:hover {
+            background: #3e2784;
         }
-        .tile-progress.tile-aqua {
-            background-color: #00c0ef;
-            color: #fff;
+        .tile.red {
+            background: #ac193d;
         }
-        .tile-progress.tile-green {
-            background-color: #00a65a;
-            color: #fff;
+        .tile.red:hover {
+            background: #7f132d;
         }
-        .tile-progress.tile-cyan {
-            background-color: #00b29e;
-            color: #fff;
+        .tile.green {
+            background: #00a600;
         }
-        .tile-progress.tile-purple {
-            background-color: #ba79cb;
-            color: #fff;
+        .tile.green:hover {
+            background: #007300;
         }
-        .tile-progress.tile-pink {
-            background-color: #ec3b83;
-            color: #fff;
+        .tile.blue {
+            background: #2672ec;
+        }
+        .tile.blue:hover {
+            background: #125acd;
+        }
+        .tile.orange {
+            background: #dc572e;
+        }
+        .tile.orange:hover {
+            background: #b8431f;
         }
     </style>
 </head>
 <body ng-app="application">
 <div class="container" ng-view>
+    <div class="row">
+        <div class="col-md-12">
+            <h1><strong>Current Bet Status</strong></h1>
+        </div>
+    </div>
     <div class="row" ng-controller="WinController">
         <div class="col-sm-3">
-            <div class="tile-progress tile-blue">
-                <div class="tile-header">
-                    <h3>Winnings as of {{latestDate}}</h3>
-                </div>
-                <div class="tile-progressbar">
-                    <span data-fill="65.5%" style="width: 65.5%;"></span>
-                </div>
-                <div class="tile-footer">
-                    <h4>
-                        <span class="pct-counter">{{netWinning}}</span>
-                    </h4>
-                </div>
+            <div class="tile purple" ng-class="(netWinning>0) ? 'purple' : 'red'">
+                <h3 class="title">{{netWinning | currency }}</h3>
+                <p>As of {{latestDate}}</p>
             </div>
         </div>
         <div class="col-sm-9">
-            <nvd3 options="options" data="data"></nvd3>
+            <nvd3-multi-bar-chart
+                    id="dayToDayLineChart"
+                    data="data"
+                    height="400"
+                    showXAxis="true"
+                    showYAxis="true"
+                    showLegend="true"
+                    tooltips="true"
+                    x="xFunction()"
+                    y="yFunction()"
+                    xAxisTickFormat="xAxisTickFormat()"
+                    interactive="true">
+                <svg></svg>
+            </nvd3-multi-bar-chart>
         </div>
     </div>
 </div>

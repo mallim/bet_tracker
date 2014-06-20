@@ -1,22 +1,15 @@
 'use strict';
 
 require("angular");
-window.d3 = require("d3");
+window.d3 = require('d3');
 require("./nv.d3");
-require("angular-nvd3");
+require("angularjs-nvd3-directives");
 require("angular-resource");
 require("moment");
 var moment = require('moment');
 var _ = require('lodash');
-var accounting = require("accounting");
 
-accounting.settings.currency.format = {
-  pos : "%s %v",   // for positive values, eg. "$ 1.00" (required)
-  neg : "%s (%v)", // for negative values, eg. "$ (1.00)" [optional]
-  zero: "%s  -- "  // for zero values, eg. "$  --" [optional]
-};
-
-var app = angular.module('application', ['ngResource','nvd3']);
+var app = angular.module('application', ['ngResource','nvd3ChartDirectives']);
 
 app.controller('WinController', ['$scope','BetsService', function($scope,BetsService){
   $scope.latestDate = null;
@@ -33,7 +26,7 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
       if( bet.return > 0 ) return sum + ( bet.return - bet.bet_amt);
       return sum + (-1 * bet.bet_amt); // == 0
     },0);
-    $scope.netWinning = accounting.formatMoney(netWin);
+    $scope.netWinning = netWin;
 
     // Prepare for chart
     var dateXAxis = _.chain($scope.bets)
@@ -49,37 +42,24 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
     // console.log("dateXAxis2", dateXAxis2);
   });
 
-  $scope.options = {
-    chart: {
-      type: 'lineChart',
-      height: 450,
-      margin : {
-        top: 20,
-        right: 20,
-        bottom: 40,
-        left: 55
-      },
-      x: function(d){
-        return d.x;
-      },
-      y: function(d){
-        return d.y;
-      },
-      useInteractiveGuideline: true,
-      xAxis: {
-        axisLabel: 'Bet Dates'
-      },
-      yAxis: {
-        axisLabel: 'Amount ($)',
-        axisLabelDistance: 30
-      }
-    },
-    title: {
-      enable: true,
-      text: 'Title for Line Chart'
-    }
+  //configuration examples
+  $scope.xAxisTickFormat = function(){
+    return function(d){
+      return window.d3.time.format('%d-%b')(new Date(d));
+    };
   };
 
+   $scope.yFunction = function(){
+    return function(d){
+      return d.y;
+    };
+  };
+
+  $scope.xFunction = function(){
+    return function(d){
+      return d.x;
+    };
+  };
 }]);
 
 app.factory('BetsService', function($resource){
@@ -99,9 +79,9 @@ function differentiateBetsByDate( theDates, theBets )
   var win_lose = [];
 
   _.forEach(theDates,function(date){
-    total_bets.push( {x:date.format("DD-MMM-YYYY"), y:0});
-    total_returns.push({x:date.format("DD-MMM-YYYY"), y:0});
-    win_lose.push({x:date.format("DD-MMM-YYYY"), y:0});
+    total_bets.push( {x:date.valueOf(), y:0});
+    total_returns.push({x:date.valueOf(), y:0});
+    win_lose.push({x:date.valueOf(), y:0});
   });
 
   _.forEach(theBets, function(the_bet) {
@@ -116,20 +96,13 @@ function differentiateBetsByDate( theDates, theBets )
 
   return [
     {
-      values: total_bets,      //values - represents the array of {x,y} data points
-      key: 'Total Bets' //key  - the name of the series.
-      // color: '#ff7f0e'  //color - optional: choose your own line color.
+      values: total_bets,
+      key: 'Total Bets',
+      color:"#112F41"
     },
     {
       values: total_returns,
       key: 'Total Returns'
-      // color: '#2ca02c'
-    },
-    {
-      values: win_lose,
-      key: 'Win/Lose',
-      // color: '#7777ff'
-      area: true      //area - set to true if you want this line to turn into a filled area chart.
     }
   ];
 }

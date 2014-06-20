@@ -15,7 +15,10 @@ module.exports = function(grunt) {
 
     // Task configuration.
     jshint: {
-      files: ['Gruntfile.js','server.js','./client/app.js'],
+      files: ['Gruntfile.js',
+              'server.js',
+              './client/**/app.js'
+      ],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -42,15 +45,13 @@ module.exports = function(grunt) {
         }
       },
       client:{
-        files:['Gruntfile.js','./client/**/*.js'],
-        tasks:["jshint","browserify"]
+        files:['Gruntfile.js','./client/**/app.js'],
+        tasks:["jshint"]
       }
     },
     browserify: {
       client: {
-        files: { './public/app.js':
-          [ './client/app.js' ]
-        },
+        files: { './public/app.js':[ './client/app.js' ]},
         bundleOptions: {
           debug: true
         },
@@ -66,6 +67,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask("server", ["jshint","express","watch" ] );
+  grunt.registerTask("server", ["jshint","browserify","express","watch" ] );
 
 };
