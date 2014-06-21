@@ -33,13 +33,17 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
                       .pluck("bet_date")
                       .uniq(dateXAxis, function(d) { return moment().diff(d, 'days'); })
                       .value();
-    // console.log("dateXAxis", dateXAxis);
 
     $scope.data = differentiateBetsByDate(dateXAxis,$scope.bets);
-    console.log( "$scope.data=",$scope.data);
 
-    // var dateXAxis2 = _.uniq(dateXAxis, function(d) { return moment().diff(d, 'days'); });
-    // console.log("dateXAxis2", dateXAxis2);
+    var pieGroup = _.chain($scope.bets)
+      .filter(function(f) { return f.return > 0; })
+      .groupBy("bet_type")
+      .map(processMapofBetType)
+      .value();
+    // console.log("pieGroup=",pieGroup);
+    $scope.dataPie = pieGroup;
+
   });
 
   //configuration examples
@@ -60,11 +64,38 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
       return d.x;
     };
   };
+
+  $scope.xPieFunction = function(){
+    return function(d){
+      return d.bet_type;
+    };
+  };
+
+  $scope.yPieFunction = function(){
+    return function(d){
+      return d.total_return;
+    };
+  };
+
 }]);
 
 app.factory('BetsService', function($resource){
   return $resource('/api/bets', {});
 });
+
+function accumulateBetTypeGroup( totals, bet ) {
+  // console.log("totals=",totals);
+  // console.log("bet=",bet);
+  return {
+    bet_type:bet.bet_type,
+    total_return:totals.total_return + bet.return
+  };
+}
+
+function processMapofBetType( betTypeGroup ){
+  // console.log("betTypeGroup=",betTypeGroup);
+  return _.reduce( betTypeGroup, accumulateBetTypeGroup, { total_return:0 } );
+}
 
 function to_date(o) {
   o.bet_date = moment(o.bet_date, "DD-MMM-YYYY");
