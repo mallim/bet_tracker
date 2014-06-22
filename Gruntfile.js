@@ -1,4 +1,7 @@
+"use strict";
+
 var path = require("path");
+var minifyify = require('minifyify');
 
 module.exports = function(grunt) {
 
@@ -24,7 +27,7 @@ module.exports = function(grunt) {
       }
     },
     express: {
-      all: {
+      dev: {
         options: {
           port: 3000,
           livereload: true,
@@ -34,6 +37,14 @@ module.exports = function(grunt) {
           // Make sure you don't use `.` or `..` in the path as Express
           // is likely to return 403 Forbidden responses if you do
           // http://stackoverflow.com/questions/14594121/express-res-sendfile-throwing-forbidden-error
+        }
+      },
+      release: {
+        options: {
+          port: 3000,
+          hostname: "0.0.0.0",
+          server: "server.js",
+          bases: path.resolve(__dirname, 'public') // Replace with the directory you want the files served from
         }
       }
     },
@@ -50,13 +61,27 @@ module.exports = function(grunt) {
       }
     },
     browserify: {
-      client: {
+      dev: {
         files: { './public/app.js':[ './client/app.js' ]},
         bundleOptions: {
           debug: true
         },
         options:{
           watch:true
+        }
+      },
+      release: {
+        files: { './public/app.js':[ './client/app.js' ]},
+        bundleOptions: {
+          debug: true
+        },
+        options:{
+          preBundleCB: function (b) {
+            b.plugin( minifyify,
+              { output: './public/app.map',
+                map:'app.map'
+              });
+          }
         }
       }
     }
@@ -67,6 +92,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask("server", ["jshint","browserify","express","watch" ] );
+  grunt.registerTask("dev", ["jshint","browserify:dev","express:dev","watch" ] );
+
+  grunt.registerTask("release",["jshint","browserify:release","express:release","express-keepalive"]);
+
+  grunt.registerTask("default",["express:release","express-keepalive"]);
 
 };

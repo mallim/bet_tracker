@@ -18,6 +18,7 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
   // Get the summary figure and latest date
   $scope.netWinning = 0;
   BetsService.query(function(response) {
+
     // Assign the response INSIDE the callback
     $scope.bets = response;
     var latestDateRecord = _.chain($scope.bets).sortBy(to_date).last().value();
@@ -37,12 +38,14 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
     $scope.data = differentiateBetsByDate(dateXAxis,$scope.bets);
 
     var pieGroup = _.chain($scope.bets)
-      .filter(function(f) { return f.return > 0; })
-      .groupBy("bet_type")
-      .map(processMapofBetType)
-      .value();
+                    .filter(function(f) { return f.return > 0; })
+                    .groupBy("bet_type")
+                    .map(processMapofBetType)
+                    .value();
     // console.log("pieGroup=",pieGroup);
     $scope.dataPie = pieGroup;
+
+    $scope.hitRate = _.filter($scope.bets, function(bet) { return bet.return > 0; }).length / $scope.bets.length;
 
   });
 
@@ -79,9 +82,15 @@ app.controller('WinController', ['$scope','BetsService', function($scope,BetsSer
 
 }]);
 
-app.factory('BetsService', function($resource){
+app.factory('BetsService', ['$resource',function($resource){
   return $resource('/api/bets', {});
-});
+}]);
+
+app.filter('percentage', ['$filter', function ($filter) {
+  return function (input, decimals) {
+    return $filter('number')(input * 100, decimals) + '%';
+  };
+}]);
 
 function accumulateBetTypeGroup( totals, bet ) {
   // console.log("totals=",totals);
