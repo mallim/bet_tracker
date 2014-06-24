@@ -5,7 +5,7 @@ var app = express();
 var knex = require('knex')({
   client: 'sqlite3',
   connection: {
-    filename: "./bet_tracker.db"
+    filename: "./db/bet_tracker.db"
   }
 });
 var bookshelf = require('bookshelf')(knex);
