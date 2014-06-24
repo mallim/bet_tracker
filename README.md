@@ -4,10 +4,10 @@ Bet Tracker
 
 ## Purpose
 
-Used to keep track my football bettings for Singapore Pools, also a demonstration of using [AngularJS](http://www.angularjs.org), [angularjs-nvd3-directives](https://github.com/cmaurer/angularjs-nvd3-directives) and [Bookshelf](http://bookshelfjs.org/)
+Used to keep track my football bettings for Singapore Pools, also a demonstration of using [AngularJS](http://www.angularjs.org), [angularjs-nvd3-directives](https://github.com/cmaurer/angularjs-nvd3-directives) and [Bookshelf.js](http://bookshelfjs.org/)
 
 ## Stack
-* Persistence store: sqlite3 based on [Bookshelf](http://bookshelfjs.org/)
+* Persistence store: sqlite3 based on [Bookshelf.js](http://bookshelfjs.org/)
 * Backend: [Node.js](http://nodejs.org/)
 * Awesome [AngularJS](http://www.angularjs.org/) on the client
 * CSS based on [Twitter's bootstrap](http://getbootstrap.com/)
